@@ -62,6 +62,7 @@ function buildCalendar(products, monthsAhead = 12, from = new Date()) {
     if (product.active === false) continue;
     const duration = Number(product.duration_days) || DAYS_PER_MONTH;
     let purchaseDate = new Date(product.start_month);
+    let lastMonthKeyUsed = null;
 
     // Avanza hasta llegar dentro del horizonte visible (o antes si empieza más atrás).
     while (purchaseDate < startMonth) {
@@ -69,16 +70,22 @@ function buildCalendar(products, monthsAhead = 12, from = new Date()) {
     }
     while (purchaseDate < horizonEnd) {
       const key = monthKey(purchaseDate);
-      const bucket = monthsMap.get(key);
-      if (bucket) {
-        const price = Number(product.price_usd);
-        bucket.items.push({
-          id: product.id,
-          name: product.name,
-          category: product.category || '',
-          price_usd: price,
-        });
-        bucket.total += price;
+      // Si la duración es corta (ej. 30 días), el siguiente ciclo puede caer
+      // otra vez en el mismo mes calendario por la diferencia de días entre
+      // meses. En ese caso se ignora para no mostrar el producto duplicado.
+      if (key !== lastMonthKeyUsed) {
+        const bucket = monthsMap.get(key);
+        if (bucket) {
+          const price = Number(product.price_usd);
+          bucket.items.push({
+            id: product.id,
+            name: product.name,
+            category: product.category || '',
+            price_usd: price,
+          });
+          bucket.total += price;
+        }
+        lastMonthKeyUsed = key;
       }
       purchaseDate = addDays(purchaseDate, duration);
     }
