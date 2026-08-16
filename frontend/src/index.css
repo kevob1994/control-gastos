@@ -259,7 +259,8 @@ input, select {
 }
 
 .calendar-card {
-  min-width: 168px;
+  min-width: 240px;
+  max-width: 240px;
   background: #fffefb;
   border: 1px solid var(--cream-200);
   border-radius: var(--radius-md);
@@ -273,34 +274,59 @@ input, select {
 }
 
 .calendar-card .month-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--text-soft);
-  text-transform: capitalize;
-}
-
-.calendar-card .month-total {
-  font-size: 20px;
-  font-weight: 800;
   color: var(--brown-700);
-  margin: 6px 0 8px;
-}
-
-.calendar-card ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 12.5px;
-  color: var(--text-soft);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  text-transform: capitalize;
+  margin-bottom: 10px;
 }
 
 .calendar-card .empty {
   font-size: 12.5px;
   color: #c9bda3;
   font-style: italic;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.calendar-table td {
+  padding: 5px 0;
+  color: var(--text-soft);
+  vertical-align: top;
+  border-bottom: 1px dashed var(--cream-200);
+}
+
+.calendar-item-category {
+  font-size: 10.5px;
+  color: #c2b393;
+}
+
+.calendar-item-price {
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.calendar-table tfoot td {
+  border-bottom: none;
+  border-top: 2px solid var(--cream-300);
+  padding-top: 8px;
+  font-weight: 800;
+  color: var(--brown-700);
+}
+
+.calendar-table tfoot tr:last-child td {
+  border-top: none;
+  padding-top: 2px;
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--text-soft);
+  text-align: right;
 }
 
 .product-table-wrap {

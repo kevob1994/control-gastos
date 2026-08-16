@@ -1,20 +1,17 @@
 /**
  * Utilidades para calcular gastos mensuales a partir de productos recurrentes.
- * Cada producto tiene: price_usd, duration_days (puede ser decimal),
- * start_month (fecha, se usa el día 1 del mes de inicio del ciclo de compra).
+ * Cada producto tiene: price_usd, duration_days (días exactos que dura una compra),
+ * start_month (fecha del primer día en que se compra / empieza a consumirse).
+ *
+ * Lógica clave: cuando un producto se agota, se asume que se vuelve a comprar
+ * COMPLETO (precio entero) en el mes calendario donde cae esa fecha de
+ * agotamiento — nunca se prorratea el precio entre los días restantes.
  */
 
 const DAYS_PER_MONTH = 30;
 
-// Redondea la duración (en días) a un número entero de meses (mínimo 1) para
-// poder ubicar las compras en un calendario mensual concreto.
-function durationInWholeMonths(duration_days) {
-  const months = Number(duration_days) / DAYS_PER_MONTH;
-  const rounded = Math.round(months);
-  return rounded < 1 ? 1 : rounded;
-}
-
-// Costo mensual promedio de un producto (para presupuesto general).
+// Costo mensual promedio de un producto (referencia de presupuesto, no se usa
+// para el calendario mes a mes).
 function monthlyAverage(product) {
   const price = Number(product.price_usd);
   const durationDays = Number(product.duration_days) || DAYS_PER_MONTH;
@@ -22,8 +19,9 @@ function monthlyAverage(product) {
   return price / durationMonths;
 }
 
-function addMonths(date, months) {
-  const d = new Date(date.getFullYear(), date.getMonth() + months, 1);
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + Math.round(days));
   return d;
 }
 
@@ -31,42 +29,43 @@ function monthKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
-// Próxima fecha de compra (>= hoy) de un producto, a partir de start_month y duración.
+function firstDayOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+// Próxima fecha de compra (>= hoy) de un producto, avanzando día a día por
+// ciclos completos de duration_days a partir de start_month.
 function nextPurchase(product, from = new Date()) {
-  const start = new Date(product.start_month);
-  const duration = durationInWholeMonths(product.duration_days);
-  const fromMonth = new Date(from.getFullYear(), from.getMonth(), 1);
-
-  if (start >= fromMonth) return start;
-
-  const monthsSinceStart =
-    (fromMonth.getFullYear() - start.getFullYear()) * 12 +
-    (fromMonth.getMonth() - start.getMonth());
-  const cyclesPassed = Math.ceil(monthsSinceStart / duration);
-  return addMonths(start, cyclesPassed * duration);
+  const duration = Number(product.duration_days) || DAYS_PER_MONTH;
+  let purchaseDate = new Date(product.start_month);
+  while (purchaseDate < from) {
+    purchaseDate = addDays(purchaseDate, duration);
+  }
+  return purchaseDate;
 }
 
 // Genera un calendario de gastos para los próximos `monthsAhead` meses,
 // indicando qué productos se deben volver a comprar en cada mes y el total.
+// Cada compra se cuenta completa en el mes donde cae la fecha exacta de
+// agotamiento (start_month + k * duration_days).
 function buildCalendar(products, monthsAhead = 12, from = new Date()) {
-  const startMonth = new Date(from.getFullYear(), from.getMonth(), 1);
+  const startMonth = firstDayOfMonth(from);
   const months = [];
   for (let i = 0; i < monthsAhead; i++) {
-    const date = addMonths(startMonth, i);
+    const date = new Date(startMonth.getFullYear(), startMonth.getMonth() + i, 1);
     months.push({ key: monthKey(date), date, items: [], total: 0 });
   }
   const monthsMap = new Map(months.map((m) => [m.key, m]));
-  const horizonEnd = addMonths(startMonth, monthsAhead);
+  const horizonEnd = new Date(startMonth.getFullYear(), startMonth.getMonth() + monthsAhead, 1);
 
   for (const product of products) {
     if (product.active === false) continue;
-    const start = new Date(product.start_month);
-    const duration = durationInWholeMonths(product.duration_days);
+    const duration = Number(product.duration_days) || DAYS_PER_MONTH;
+    let purchaseDate = new Date(product.start_month);
 
-    let purchaseDate = start;
     // Avanza hasta llegar dentro del horizonte visible (o antes si empieza más atrás).
     while (purchaseDate < startMonth) {
-      purchaseDate = addMonths(purchaseDate, duration);
+      purchaseDate = addDays(purchaseDate, duration);
     }
     while (purchaseDate < horizonEnd) {
       const key = monthKey(purchaseDate);
@@ -76,11 +75,12 @@ function buildCalendar(products, monthsAhead = 12, from = new Date()) {
         bucket.items.push({
           id: product.id,
           name: product.name,
+          category: product.category || '',
           price_usd: price,
         });
         bucket.total += price;
       }
-      purchaseDate = addMonths(purchaseDate, duration);
+      purchaseDate = addDays(purchaseDate, duration);
     }
   }
 
@@ -88,7 +88,7 @@ function buildCalendar(products, monthsAhead = 12, from = new Date()) {
     month: m.key,
     label: m.date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }),
     total: Math.round(m.total * 100) / 100,
-    items: m.items,
+    items: m.items.sort((a, b) => a.name.localeCompare(b.name)),
   }));
 }
 
@@ -113,4 +113,4 @@ function buildSummary(products, monthsAhead = 12, from = new Date()) {
   };
 }
 
-module.exports = { monthlyAverage, nextPurchase, buildCalendar, buildSummary, durationInWholeMonths };
+module.exports = { monthlyAverage, nextPurchase, buildCalendar, buildSummary };
