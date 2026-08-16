@@ -1,0 +1,460 @@
+:root {
+  --cream-50: #fffdf8;
+  --cream-100: #fbf3e2;
+  --cream-200: #f5e6c8;
+  --cream-300: #ecd8ac;
+  --brown-500: #a97a4f;
+  --brown-600: #8b5e34;
+  --brown-700: #6f4518;
+  --brown-900: #4a3324;
+  --terracotta: #d98555;
+  --terracotta-dark: #c06a3c;
+  --sage: #8ea788;
+  --sage-dark: #6c8967;
+  --rose: #cf7c7c;
+  --text-main: #4a3b2a;
+  --text-soft: #8a7a63;
+  --shadow-soft: 0 4px 16px rgba(139, 94, 52, 0.12);
+  --shadow-strong: 0 8px 28px rgba(139, 94, 52, 0.2);
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', 'Quicksand', sans-serif;
+  background: linear-gradient(160deg, var(--cream-50) 0%, var(--cream-100) 55%, var(--cream-200) 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', sans-serif;
+  color: var(--brown-700);
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, select {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--cream-300);
+  border-radius: 10px;
+}
+
+.app-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-title .emoji {
+  font-size: 34px;
+}
+
+.app-title h1 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.app-title p {
+  margin: 2px 0 0;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.card {
+  background: #fffefb;
+  border: 1px solid var(--cream-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 22px;
+}
+
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cream-100);
+  border: 1px solid var(--cream-300);
+  border-radius: 999px;
+  padding: 8px 10px 8px 18px;
+}
+
+.rate-bar label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brown-700);
+  white-space: nowrap;
+}
+
+.rate-bar input {
+  width: 90px;
+  border: none;
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-weight: 600;
+  color: var(--brown-700);
+  border: 1px solid var(--cream-300);
+}
+
+.rate-bar input:focus {
+  outline: 2px solid var(--terracotta);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #fffefb 0%, var(--cream-100) 100%);
+  border: 1px solid var(--cream-200);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.summary-card .label {
+  font-size: 13px;
+  color: var(--text-soft);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.summary-card .value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--brown-700);
+  margin-top: 6px;
+}
+
+.summary-card .sub {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: 4px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 34px 0 14px;
+}
+
+.section-title h2 {
+  font-size: 19px;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--terracotta);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(217, 133, 85, 0.4);
+}
+
+.btn-primary:hover {
+  background: var(--terracotta-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--cream-300);
+  color: var(--brown-700);
+}
+
+.btn-ghost:hover {
+  background: var(--cream-100);
+}
+
+.btn-icon {
+  background: var(--cream-100);
+  border: 1px solid var(--cream-300);
+  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.btn-icon.danger:hover {
+  background: #fbe4e2;
+  border-color: var(--rose);
+}
+
+.btn-icon.edit:hover {
+  background: #eef4ec;
+  border-color: var(--sage);
+}
+
+.calendar-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.calendar-card {
+  min-width: 168px;
+  background: #fffefb;
+  border: 1px solid var(--cream-200);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-soft);
+  flex-shrink: 0;
+}
+
+.calendar-card.current {
+  border: 2px solid var(--terracotta);
+}
+
+.calendar-card .month-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-soft);
+  text-transform: capitalize;
+}
+
+.calendar-card .month-total {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brown-700);
+  margin: 6px 0 8px;
+}
+
+.calendar-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--text-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.calendar-card .empty {
+  font-size: 12.5px;
+  color: #c9bda3;
+  font-style: italic;
+}
+
+.product-table-wrap {
+  background: #fffefb;
+  border: 1px solid var(--cream-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+table.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.product-table thead {
+  background: var(--cream-100);
+}
+
+.product-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--brown-600);
+  font-weight: 700;
+}
+
+.product-table td {
+  padding: 13px 16px;
+  border-top: 1px solid var(--cream-100);
+  vertical-align: middle;
+}
+
+.product-table tr:hover td {
+  background: #fdf8ec;
+}
+
+.pill {
+  display: inline-block;
+  background: var(--cream-200);
+  color: var(--brown-700);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-soft);
+}
+
+.empty-state .emoji {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 51, 36, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.modal-card {
+  background: var(--cream-50);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: var(--shadow-strong);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-card h2 {
+  margin-bottom: 18px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brown-700);
+  margin-bottom: 6px;
+}
+
+.form-field input, .form-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cream-300);
+  background: #fff;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.form-field input:focus, .form-field select:focus {
+  outline: none;
+  border-color: var(--terracotta);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--brown-700);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-strong);
+  z-index: 60;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .product-table-wrap {
+    overflow-x: auto;
+  }
+  table.product-table {
+    min-width: 640px;
+  }
+}
