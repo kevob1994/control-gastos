@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const initDb = require('./db/init');
+const seedIfEmpty = require('./db/seed');
 const productsRouter = require('./routes/products');
 const settingsRouter = require('./routes/settings');
 const summaryRouter = require('./routes/summary');
@@ -27,6 +28,7 @@ app.use((err, req, res, next) => {
 async function start() {
   try {
     await initDb();
+    await seedIfEmpty();
   } catch (err) {
     console.error('No se pudo inicializar la base de datos:', err.message);
   }
