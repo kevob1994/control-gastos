@@ -1,6 +1,6 @@
 # Gastos de la Abuelita 👵🏻💛
 
-App para llevar el control de gastos mensuales de medicinas y productos: producto, precio (USD), duración y mes de inicio del ciclo de compra. Calcula el gasto mensual promedio y un calendario de próximas compras, con conversión a bolívares según la tasa del día.
+App para llevar el control de gastos mensuales (medicinas, mercado y otros gastos generales): producto, precio (USD), duración en días y mes de inicio del ciclo de compra. Calcula el gasto mensual promedio y un calendario de próximas compras, con conversión a bolívares según la tasa del día.
 
 ## Estructura
 
@@ -12,8 +12,8 @@ control-gastos-app/
 
 ## Cómo funciona el cálculo
 
-- **Gasto mensual promedio**: `precio USD ÷ duración en meses`, sumado entre todos los productos activos.
-- **Calendario de próximas compras**: usando el *mes de inicio* de cada producto, calcula cuándo vuelve a tocar comprarlo (cada *duración* meses) y agrupa el total por mes.
+- **Gasto mensual promedio**: `precio USD ÷ (duración en días / 30)`, sumado entre todos los productos activos.
+- **Calendario de próximas compras**: usando el *mes de inicio* de cada producto, calcula cuándo vuelve a tocar comprarlo (cada *duración en días*, redondeada a meses completos) y agrupa el total por mes.
 - **Bolívares**: se calculan multiplicando el precio en USD por la tasa que configures en la barra superior (no se guarda historial, es la tasa "del día").
 
 ## Desarrollo local

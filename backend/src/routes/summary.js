@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
     const products = rows.map((r) => ({
       ...r,
       price_usd: Number(r.price_usd),
-      duration_months: Number(r.duration_months),
+      duration_days: Number(r.duration_days),
     }));
     const summary = buildSummary(products, monthsAhead);
     res.json(summary);

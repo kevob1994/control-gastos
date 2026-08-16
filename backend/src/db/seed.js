@@ -12,9 +12,9 @@ async function seedIfEmpty() {
   }
   for (const p of products) {
     await pool.query(
-      `INSERT INTO products (name, category, price_usd, duration_months, start_month, notes)
+      `INSERT INTO products (name, category, price_usd, duration_days, start_month, notes)
        VALUES ($1,$2,$3,$4,$5,$6)`,
-      [p.name, p.category, p.price_usd, p.duration_months, p.start_month, p.notes]
+      [p.name, p.category, p.price_usd, p.duration_days, p.start_month, p.notes]
     );
   }
   console.log(`[seed] Se insertaron ${products.length} productos desde el excel.`);

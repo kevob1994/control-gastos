@@ -3,8 +3,8 @@ export default function ProductTable({ products, rate, onEdit, onDelete }) {
     return (
       <div className="product-table-wrap">
         <div className="empty-state">
-          <span className="emoji">🧴</span>
-          Aún no has agregado productos. ¡Agrega el primero!
+          <span className="emoji">🛒</span>
+          Aún no has agregado gastos. ¡Agrega el primero!
         </div>
       </div>
     );
@@ -15,7 +15,7 @@ export default function ProductTable({ products, rate, onEdit, onDelete }) {
       <table className="product-table">
         <thead>
           <tr>
-            <th>Producto</th>
+            <th>Producto / Gasto</th>
             <th>Categoría</th>
             <th>Precio</th>
             <th>Duración</th>
@@ -26,7 +26,8 @@ export default function ProductTable({ products, rate, onEdit, onDelete }) {
         </thead>
         <tbody>
           {products.map((p) => {
-            const monthly = p.price_usd / (p.duration_months || 1);
+            const durationMonths = (p.duration_days || 30) / 30;
+            const monthly = p.price_usd / durationMonths;
             return (
               <tr key={p.id}>
                 <td>
@@ -40,7 +41,7 @@ export default function ProductTable({ products, rate, onEdit, onDelete }) {
                     Bs {(p.price_usd * rate).toLocaleString('es-VE', { maximumFractionDigits: 2 })}
                   </div>
                 </td>
-                <td>{p.duration_months} {p.duration_months === 1 ? 'mes' : 'meses'}</td>
+                <td>{p.duration_days} {p.duration_days === 1 ? 'día' : 'días'}</td>
                 <td>{formatMonth(p.start_month)}</td>
                 <td>
                   ${monthly.toFixed(2)}

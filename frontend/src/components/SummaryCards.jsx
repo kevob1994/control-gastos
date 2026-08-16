@@ -11,7 +11,7 @@ export default function SummaryCards({ summary, rate }) {
         <div className="sub">≈ Bs {bs.toLocaleString('es-VE', { maximumFractionDigits: 2 })}</div>
       </div>
       <div className="summary-card">
-        <div className="label">💊 Productos activos</div>
+        <div className="label">🛒 Gastos activos</div>
         <div className="value">{summary.total_products}</div>
         <div className="sub">registrados actualmente</div>
       </div>

@@ -92,7 +92,7 @@ export default function App() {
           <span className="emoji">👵🏻💊</span>
           <div>
             <h1>Gastos de la Abuelita</h1>
-            <p>Control mensual de medicinas y productos</p>
+            <p>Control mensual de medicinas, mercado y otros gastos</p>
           </div>
         </div>
         <RateBar rate={rate} onSave={handleSaveRate} />
@@ -112,9 +112,9 @@ export default function App() {
       <CalendarView calendar={summary?.calendar} rate={rate} />
 
       <div className="section-title">
-        <h2>💊 Productos</h2>
+        <h2>🛒 Productos y gastos</h2>
         <button className="btn btn-primary" onClick={() => { setEditingProduct(null); setShowForm(true); }}>
-          + Agregar producto
+          + Agregar gasto
         </button>
       </div>
       <ProductTable

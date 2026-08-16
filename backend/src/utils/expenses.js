@@ -1,21 +1,25 @@
 /**
  * Utilidades para calcular gastos mensuales a partir de productos recurrentes.
- * Cada producto tiene: price_usd, duration_months (puede ser decimal),
+ * Cada producto tiene: price_usd, duration_days (puede ser decimal),
  * start_month (fecha, se usa el día 1 del mes de inicio del ciclo de compra).
  */
 
-// Redondea la duración a un número entero de meses (mínimo 1) para poder
-// ubicar las compras en un calendario mensual concreto.
-function durationInWholeMonths(duration_months) {
-  const rounded = Math.round(Number(duration_months));
+const DAYS_PER_MONTH = 30;
+
+// Redondea la duración (en días) a un número entero de meses (mínimo 1) para
+// poder ubicar las compras en un calendario mensual concreto.
+function durationInWholeMonths(duration_days) {
+  const months = Number(duration_days) / DAYS_PER_MONTH;
+  const rounded = Math.round(months);
   return rounded < 1 ? 1 : rounded;
 }
 
 // Costo mensual promedio de un producto (para presupuesto general).
 function monthlyAverage(product) {
   const price = Number(product.price_usd);
-  const duration = Number(product.duration_months) || 1;
-  return price / duration;
+  const durationDays = Number(product.duration_days) || DAYS_PER_MONTH;
+  const durationMonths = durationDays / DAYS_PER_MONTH;
+  return price / durationMonths;
 }
 
 function addMonths(date, months) {
@@ -30,7 +34,7 @@ function monthKey(date) {
 // Próxima fecha de compra (>= hoy) de un producto, a partir de start_month y duración.
 function nextPurchase(product, from = new Date()) {
   const start = new Date(product.start_month);
-  const duration = durationInWholeMonths(product.duration_months);
+  const duration = durationInWholeMonths(product.duration_days);
   const fromMonth = new Date(from.getFullYear(), from.getMonth(), 1);
 
   if (start >= fromMonth) return start;
@@ -57,7 +61,7 @@ function buildCalendar(products, monthsAhead = 12, from = new Date()) {
   for (const product of products) {
     if (product.active === false) continue;
     const start = new Date(product.start_month);
-    const duration = durationInWholeMonths(product.duration_months);
+    const duration = durationInWholeMonths(product.duration_days);
 
     let purchaseDate = start;
     // Avanza hasta llegar dentro del horizonte visible (o antes si empieza más atrás).

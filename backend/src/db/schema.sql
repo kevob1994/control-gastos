@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS products (
   name TEXT NOT NULL,
   category TEXT DEFAULT '',
   price_usd NUMERIC(10,2) NOT NULL,
-  duration_months NUMERIC(6,2) NOT NULL,
+  duration_days NUMERIC(6,1) NOT NULL,
   start_month DATE NOT NULL,
   notes TEXT DEFAULT '',
   active BOOLEAN NOT NULL DEFAULT true,

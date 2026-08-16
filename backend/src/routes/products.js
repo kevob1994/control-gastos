@@ -7,7 +7,7 @@ function serialize(row) {
   return {
     ...row,
     price_usd: Number(row.price_usd),
-    duration_months: Number(row.duration_months),
+    duration_days: Number(row.duration_days),
     start_month: row.start_month instanceof Date
       ? row.start_month.toISOString().slice(0, 10)
       : row.start_month,
@@ -27,16 +27,16 @@ router.get('/', async (req, res, next) => {
 // POST /api/products
 router.post('/', async (req, res, next) => {
   try {
-    const { name, category = '', price_usd, duration_months, start_month, notes = '', active = true } = req.body;
+    const { name, category = '', price_usd, duration_days, start_month, notes = '', active = true } = req.body;
 
-    if (!name || price_usd == null || duration_months == null || !start_month) {
-      return res.status(400).json({ error: 'Faltan campos requeridos: name, price_usd, duration_months, start_month' });
+    if (!name || price_usd == null || duration_days == null || !start_month) {
+      return res.status(400).json({ error: 'Faltan campos requeridos: name, price_usd, duration_days, start_month' });
     }
 
     const { rows } = await pool.query(
-      `INSERT INTO products (name, category, price_usd, duration_months, start_month, notes, active)
+      `INSERT INTO products (name, category, price_usd, duration_days, start_month, notes, active)
        VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
-      [name, category, price_usd, duration_months, start_month, notes, active]
+      [name, category, price_usd, duration_days, start_month, notes, active]
     );
     res.status(201).json(serialize(rows[0]));
   } catch (err) {
@@ -48,20 +48,20 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, category, price_usd, duration_months, start_month, notes, active } = req.body;
+    const { name, category, price_usd, duration_days, start_month, notes, active } = req.body;
 
     const { rows } = await pool.query(
       `UPDATE products SET
         name = COALESCE($1, name),
         category = COALESCE($2, category),
         price_usd = COALESCE($3, price_usd),
-        duration_months = COALESCE($4, duration_months),
+        duration_days = COALESCE($4, duration_days),
         start_month = COALESCE($5, start_month),
         notes = COALESCE($6, notes),
         active = COALESCE($7, active),
         updated_at = now()
        WHERE id = $8 RETURNING *`,
-      [name, category, price_usd, duration_months, start_month, notes, active, id]
+      [name, category, price_usd, duration_days, start_month, notes, active, id]
     );
 
     if (rows.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });

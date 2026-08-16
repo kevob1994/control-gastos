@@ -1,18 +1,21 @@
 import { useState } from 'react';
 
+const CATEGORY_SUGGESTIONS = ['Medicinas', 'Mercado', 'Servicios', 'Transporte', 'Aseo personal', 'Otros'];
+
+function nextMonth() {
+  const d = new Date();
+  d.setMonth(d.getMonth() + 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+}
+
 const emptyForm = {
   name: '',
   category: '',
   price_usd: '',
-  duration_months: '',
-  start_month: currentMonth(),
+  duration_days: '',
+  start_month: nextMonth(),
   notes: '',
 };
-
-function currentMonth() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
-}
 
 export default function ProductFormModal({ initialData, onClose, onSubmit }) {
   const [form, setForm] = useState(
@@ -21,7 +24,7 @@ export default function ProductFormModal({ initialData, onClose, onSubmit }) {
           name: initialData.name,
           category: initialData.category || '',
           price_usd: initialData.price_usd,
-          duration_months: initialData.duration_months,
+          duration_days: initialData.duration_days,
           start_month: initialData.start_month,
           notes: initialData.notes || '',
         }
@@ -35,7 +38,7 @@ export default function ProductFormModal({ initialData, onClose, onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!form.name || !form.price_usd || !form.duration_months || !form.start_month) {
+    if (!form.name || !form.price_usd || !form.duration_days || !form.start_month) {
       setError('Completa producto, precio, duración y mes de inicio.');
       return;
     }
@@ -44,7 +47,7 @@ export default function ProductFormModal({ initialData, onClose, onSubmit }) {
       await onSubmit({
         ...form,
         price_usd: Number(form.price_usd),
-        duration_months: Number(form.duration_months),
+        duration_days: Number(form.duration_days),
       });
     } catch (err) {
       setError(err.message);
@@ -56,15 +59,26 @@ export default function ProductFormModal({ initialData, onClose, onSubmit }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        <h2>{initialData ? '✏️ Editar producto' : '➕ Nuevo producto'}</h2>
+        <h2>{initialData ? '✏️ Editar gasto' : '➕ Nuevo gasto'}</h2>
         <form className="form-grid" onSubmit={handleSubmit}>
           <div className="form-field">
-            <label>Producto</label>
-            <input type="text" placeholder="Ej. Euthyrox 50mcg" value={form.name} onChange={handleChange('name')} />
+            <label>Producto o gasto</label>
+            <input type="text" placeholder="Ej. Euthyrox 50mcg, Mercado semanal, Gas..." value={form.name} onChange={handleChange('name')} />
           </div>
           <div className="form-field">
             <label>Categoría (opcional)</label>
-            <input type="text" placeholder="Ej. Tensión, Suplemento..." value={form.category} onChange={handleChange('category')} />
+            <input
+              type="text"
+              list="category-suggestions"
+              placeholder="Ej. Medicinas, Mercado, Servicios..."
+              value={form.category}
+              onChange={handleChange('category')}
+            />
+            <datalist id="category-suggestions">
+              {CATEGORY_SUGGESTIONS.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
           </div>
           <div className="form-row">
             <div className="form-field">
@@ -72,8 +86,8 @@ export default function ProductFormModal({ initialData, onClose, onSubmit }) {
               <input type="number" step="0.01" min="0" placeholder="0.00" value={form.price_usd} onChange={handleChange('price_usd')} />
             </div>
             <div className="form-field">
-              <label>Duración (meses)</label>
-              <input type="number" step="0.1" min="0.1" placeholder="1" value={form.duration_months} onChange={handleChange('duration_months')} />
+              <label>Duración (días)</label>
+              <input type="number" step="1" min="1" placeholder="30" value={form.duration_days} onChange={handleChange('duration_days')} />
             </div>
           </div>
           <div className="form-field">
@@ -82,7 +96,7 @@ export default function ProductFormModal({ initialData, onClose, onSubmit }) {
           </div>
           <div className="form-field">
             <label>Notas (opcional)</label>
-            <input type="text" placeholder="Nombre genérico, farmacia, etc." value={form.notes} onChange={handleChange('notes')} />
+            <input type="text" placeholder="Nombre genérico, tienda, etc." value={form.notes} onChange={handleChange('notes')} />
           </div>
 
           {error && <div style={{ color: 'var(--rose)', fontSize: 13, fontWeight: 600 }}>{error}</div>}
