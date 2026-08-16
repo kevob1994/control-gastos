@@ -56,10 +56,11 @@ export default function App() {
     showToast('Tasa actualizada 💵');
   };
 
-  const handleSaveReferenceMonth = async (newMonth) => {
+  const handleBulkStartMonth = async (newMonth) => {
     setReferenceMonth(newMonth);
-    await api.updateSettings({ reference_month: newMonth });
-    showToast('Mes de comienzo actualizado 🗓️');
+    const updated = await api.bulkSetStartMonth(newMonth);
+    setProducts(updated);
+    showToast('Mes de inicio reasignado a todos los productos 🗓️');
     await refreshSummary();
   };
 
@@ -106,7 +107,7 @@ export default function App() {
           </div>
         </div>
         <div className="controls-bar">
-          <ReferenceMonthBar referenceMonth={referenceMonth} onSave={handleSaveReferenceMonth} />
+          <ReferenceMonthBar referenceMonth={referenceMonth} onApply={handleBulkStartMonth} />
           <RateBar rate={rate} onSave={handleSaveRate} />
         </div>
       </header>

@@ -44,6 +44,30 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+// PUT /api/products/bulk-start-month
+// Reasigna el mes de inicio de TODOS los productos a la misma fecha
+// (reinicio general del conteo de gastos). Debe ir antes de /:id.
+router.put('/bulk-start-month', async (req, res, next) => {
+  try {
+    const { start_month } = req.body;
+    if (!start_month) {
+      return res.status(400).json({ error: 'Falta start_month' });
+    }
+    const { rows } = await pool.query(
+      'UPDATE products SET start_month = $1, updated_at = now() RETURNING *',
+      [start_month]
+    );
+    await pool.query(
+      `INSERT INTO settings (id, reference_month, updated_at) VALUES (1, $1, now())
+       ON CONFLICT (id) DO UPDATE SET reference_month = $1, updated_at = now()`,
+      [start_month]
+    );
+    res.json(rows.map(serialize));
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PUT /api/products/:id
 router.put('/:id', async (req, res, next) => {
   try {

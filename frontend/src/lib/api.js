@@ -18,6 +18,8 @@ export const api = {
   createProduct: (data) => request('/products', { method: 'POST', body: JSON.stringify(data) }),
   updateProduct: (id, data) => request(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteProduct: (id) => request(`/products/${id}`, { method: 'DELETE' }),
+  bulkSetStartMonth: (start_month) =>
+    request('/products/bulk-start-month', { method: 'PUT', body: JSON.stringify({ start_month }) }),
   getSettings: () => request('/settings'),
   updateSettings: (data) => request('/settings', { method: 'PUT', body: JSON.stringify(data) }),
   getSummary: (months = 12) => request(`/summary?months=${months}`),

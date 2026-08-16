@@ -7,17 +7,15 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   try {
     const monthsAhead = Number(req.query.months) || 12;
-    const [productsResult, settingsResult] = await Promise.all([
-      pool.query('SELECT * FROM products'),
-      pool.query('SELECT reference_month FROM settings WHERE id = 1'),
-    ]);
-    const products = productsResult.rows.map((r) => ({
+    const { rows } = await pool.query('SELECT * FROM products');
+    const products = rows.map((r) => ({
       ...r,
       price_usd: Number(r.price_usd),
       duration_days: Number(r.duration_days),
     }));
-    const referenceMonth = settingsResult.rows[0]?.reference_month || new Date();
-    const summary = buildSummary(products, monthsAhead, new Date(referenceMonth));
+    // El calendario siempre parte del mes real de hoy. Para "reiniciar" el
+    // conteo, se reasigna el start_month de los productos (ver bulk-start-month).
+    const summary = buildSummary(products, monthsAhead, new Date());
     res.json(summary);
   } catch (err) {
     next(err);
