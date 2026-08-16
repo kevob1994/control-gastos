@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS settings (
   id INT PRIMARY KEY DEFAULT 1,
   dollar_rate NUMERIC(10,4) NOT NULL DEFAULT 1,
+  reference_month DATE NOT NULL DEFAULT date_trunc('month', CURRENT_DATE)::date,
   updated_at TIMESTAMP NOT NULL DEFAULT now(),
   CONSTRAINT single_row CHECK (id = 1)
 );

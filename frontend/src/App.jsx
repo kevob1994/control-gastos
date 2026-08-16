@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { api } from './lib/api';
 import RateBar from './components/RateBar';
+import ReferenceMonthBar from './components/ReferenceMonthBar';
 import SummaryCards from './components/SummaryCards';
 import CalendarView from './components/CalendarView';
 import ProductTable from './components/ProductTable';
@@ -11,6 +12,7 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [summary, setSummary] = useState(null);
   const [rate, setRate] = useState(1);
+  const [referenceMonth, setReferenceMonth] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [toast, setToast] = useState('');
@@ -31,6 +33,7 @@ export default function App() {
       setProducts(p);
       setSummary(s);
       setRate(r.dollar_rate);
+      setReferenceMonth(r.reference_month);
     } catch (err) {
       setLoadError('No se pudo conectar con el servidor. ¿Está corriendo el backend?');
     } finally {
@@ -51,6 +54,13 @@ export default function App() {
     setRate(newRate);
     await api.updateSettings({ dollar_rate: newRate });
     showToast('Tasa actualizada 💵');
+  };
+
+  const handleSaveReferenceMonth = async (newMonth) => {
+    setReferenceMonth(newMonth);
+    await api.updateSettings({ reference_month: newMonth });
+    showToast('Mes de comienzo actualizado 🗓️');
+    await refreshSummary();
   };
 
   const handleCreateOrUpdate = async (data) => {
@@ -95,7 +105,10 @@ export default function App() {
             <p>Control mensual de medicinas, mercado y otros gastos</p>
           </div>
         </div>
-        <RateBar rate={rate} onSave={handleSaveRate} />
+        <div className="controls-bar">
+          <ReferenceMonthBar referenceMonth={referenceMonth} onSave={handleSaveReferenceMonth} />
+          <RateBar rate={rate} onSave={handleSaveRate} />
+        </div>
       </header>
 
       {loadError && (

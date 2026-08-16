@@ -94,8 +94,10 @@ function buildCalendar(products, monthsAhead = 12, from = new Date()) {
 
 function buildSummary(products, monthsAhead = 12, from = new Date()) {
   const active = products.filter((p) => p.active !== false);
-  const totalMonthlyAverage = active.reduce((sum, p) => sum + monthlyAverage(p), 0);
   const calendar = buildCalendar(products, monthsAhead, from);
+  // Gasto real del mes de referencia: la suma completa de los productos que
+  // tocan comprarse ese mes (no se prorratea por los días restantes).
+  const currentMonthTotal = calendar[0]?.total ?? 0;
   const withNextPurchase = active.map((p) => ({
     id: p.id,
     name: p.name,
@@ -103,7 +105,8 @@ function buildSummary(products, monthsAhead = 12, from = new Date()) {
   }));
 
   return {
-    total_monthly_average_usd: Math.round(totalMonthlyAverage * 100) / 100,
+    total_current_month_usd: currentMonthTotal,
+    current_month_label: calendar[0]?.label ?? '',
     total_products: active.length,
     calendar,
     next_purchases: withNextPurchase.sort((a, b) => a.next_purchase.localeCompare(b.next_purchase)),

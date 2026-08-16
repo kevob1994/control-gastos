@@ -1,12 +1,12 @@
 export default function SummaryCards({ summary, rate }) {
   if (!summary) return null;
-  const usd = summary.total_monthly_average_usd;
+  const usd = summary.total_current_month_usd;
   const bs = usd * rate;
 
   return (
     <div className="summary-grid">
       <div className="summary-card">
-        <div className="label">📊 Gasto mensual promedio</div>
+        <div className="label">📊 Gasto de {summary.current_month_label}</div>
         <div className="value">${usd.toFixed(2)}</div>
         <div className="sub">≈ Bs {bs.toLocaleString('es-VE', { maximumFractionDigits: 2 })}</div>
       </div>

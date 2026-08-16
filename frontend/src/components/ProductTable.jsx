@@ -20,44 +20,33 @@ export default function ProductTable({ products, rate, onEdit, onDelete }) {
             <th>Precio</th>
             <th>Duración</th>
             <th>Mes de inicio</th>
-            <th>Mensual (USD/Bs)</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => {
-            const durationMonths = (p.duration_days || 30) / 30;
-            const monthly = p.price_usd / durationMonths;
-            return (
-              <tr key={p.id}>
-                <td>
-                  <strong>{p.name}</strong>
-                  {p.notes ? <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>{p.notes}</div> : null}
-                </td>
-                <td>{p.category ? <span className="pill">{p.category}</span> : '—'}</td>
-                <td>
-                  ${p.price_usd.toFixed(2)}
-                  <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>
-                    Bs {(p.price_usd * rate).toLocaleString('es-VE', { maximumFractionDigits: 2 })}
-                  </div>
-                </td>
-                <td>{p.duration_days} {p.duration_days === 1 ? 'día' : 'días'}</td>
-                <td>{formatMonth(p.start_month)}</td>
-                <td>
-                  ${monthly.toFixed(2)}
-                  <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>
-                    Bs {(monthly * rate).toLocaleString('es-VE', { maximumFractionDigits: 2 })}
-                  </div>
-                </td>
-                <td>
-                  <div className="actions-cell">
-                    <button className="btn-icon edit" title="Editar" onClick={() => onEdit(p)}>✏️</button>
-                    <button className="btn-icon danger" title="Eliminar" onClick={() => onDelete(p)}>🗑️</button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+          {products.map((p) => (
+            <tr key={p.id}>
+              <td>
+                <strong>{p.name}</strong>
+                {p.notes ? <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>{p.notes}</div> : null}
+              </td>
+              <td>{p.category ? <span className="pill">{p.category}</span> : '—'}</td>
+              <td>
+                ${p.price_usd.toFixed(2)}
+                <div style={{ fontSize: 12, color: 'var(--text-soft)' }}>
+                  Bs {(p.price_usd * rate).toLocaleString('es-VE', { maximumFractionDigits: 2 })}
+                </div>
+              </td>
+              <td>{p.duration_days} {p.duration_days === 1 ? 'día' : 'días'}</td>
+              <td>{formatMonth(p.start_month)}</td>
+              <td>
+                <div className="actions-cell">
+                  <button className="btn-icon edit" title="Editar" onClick={() => onEdit(p)}>✏️</button>
+                  <button className="btn-icon danger" title="Eliminar" onClick={() => onDelete(p)}>🗑️</button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

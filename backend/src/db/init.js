@@ -22,10 +22,28 @@ async function migrateDurationToDays() {
   }
 }
 
+// Agrega la columna reference_month a instalaciones existentes que no la tengan.
+async function migrateReferenceMonth() {
+  const { rows } = await pool.query(`
+    SELECT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name='settings' AND column_name='reference_month'
+    ) AS has_reference_month
+  `);
+  if (!rows[0].has_reference_month) {
+    console.log('[db] Agregando columna reference_month a settings...');
+    await pool.query(
+      "ALTER TABLE settings ADD COLUMN reference_month DATE NOT NULL DEFAULT date_trunc('month', CURRENT_DATE)::date"
+    );
+    console.log('[db] Columna reference_month agregada.');
+  }
+}
+
 async function initDb() {
   const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   await pool.query(schema);
   await migrateDurationToDays();
+  await migrateReferenceMonth();
   console.log('[db] Esquema verificado/creado correctamente.');
 }
 
